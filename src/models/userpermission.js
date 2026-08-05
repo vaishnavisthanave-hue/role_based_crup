@@ -1,0 +1,29 @@
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+  class UserPermission extends Model {
+
+    static associate(models) {
+
+      UserPermission.belongsTo(models.User, {
+        foreignKey: "userId"
+      });
+
+      UserPermission.belongsTo(models.Permission, {
+        foreignKey: "permissionId"
+      });
+
+    }
+  }
+
+  UserPermission.init({
+    userId: DataTypes.INTEGER,
+    permissionId: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'UserPermission',
+  });
+
+  return UserPermission;
+};
