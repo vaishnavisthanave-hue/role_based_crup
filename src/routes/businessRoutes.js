@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const verifyToken = require("../middleware/auth");
+const upload = require("../middleware/upload");
 const BusinessController = require("../controllers/BusinessController");
 
 /**
@@ -38,7 +39,15 @@ const BusinessController = require("../controllers/BusinessController");
  *       401:
  *         description: Unauthorized
  */
-router.post("/", verifyToken, BusinessController.createBusiness);
+router.post(
+  "/",
+  verifyToken,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "video", maxCount: 1 }
+  ]),
+  BusinessController.createBusiness
+);
 
 /**
  * @swagger
@@ -126,6 +135,14 @@ router.get("/:id", verifyToken, BusinessController.getBusinessById);
  *       404:
  *         description: Business not found
  */
-router.put("/:id", verifyToken, BusinessController.updateBusiness);
+router.put(
+  "/:id",
+  verifyToken,
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "video", maxCount: 1 }
+  ]),
+  BusinessController.updateBusiness
+);
 
 module.exports = router;
