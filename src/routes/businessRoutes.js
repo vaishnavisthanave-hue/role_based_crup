@@ -27,12 +27,11 @@ const BusinessController = require("../controllers/BusinessController");
  *           schema:
  *             type: object
  *             properties:
- *               businessName:
+ *               title:
  *                 type: string
- *               address:
+ *               discription:
  *                 type: string
- *               phone:
- *                 type: string
+ *              
  *     responses:
  *       201:
  *         description: Business created successfully

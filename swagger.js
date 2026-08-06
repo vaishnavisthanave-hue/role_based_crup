@@ -1,4 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
+require("dotenv").config();
 
 const options = {
   definition: {
@@ -10,10 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
-      },
-      {
-        url: "https://snooze-emphasize-deranged.ngrok-free.dev",
+        url: process.env.API_URL || "http://localhost:3000",
       },
     ],
     components: {
@@ -30,7 +28,5 @@ const options = {
 };
 
 const swaggerSpec = swaggerJsdoc(options);
-
-console.log(JSON.stringify(swaggerSpec, null, 2));
 
 module.exports = swaggerSpec;

@@ -1,7 +1,8 @@
 const { Business ,user} = require("../models");
 const fs = require("fs");
-const crypto = require("crypto");
 const path = require("path");
+const crypto = require("crypto");
+const ffmpeg = require("fluent-ffmpeg");
 
 class BusinessController {
 
@@ -72,7 +73,7 @@ class BusinessController {
       success: true,
       message: "Business created successfully",
       data: business,
-      mageSize: `${(imageSize / 1024).toFixed(2)} KB`,
+      imageSize: `${(imageSize / 1024).toFixed(2)} KB`,
       videoSize: `${(videoSize / 1024).toFixed(2)} KB`,
     });
 
@@ -227,7 +228,6 @@ static async updateBusiness(req, res) {
 
   static async getMyBusinesses(req, res) {
     try {
-        console.log(`user id from token12: ${req.user.id}`);
         const businesses = await Business.findAll({
             where: {
                 userid: req.user.id

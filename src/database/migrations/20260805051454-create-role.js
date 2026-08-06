@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      roleid: {
-        type: Sequelize.STRING
-      },
       name: {
         type: Sequelize.STRING
       },

@@ -5,10 +5,17 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
 
+      // User ↔ Permission (Many-to-Many)
       User.belongsToMany(models.Permission, {
         through: models.UserPermission,
         foreignKey: "userId",
         otherKey: "permissionId"
+      });
+
+      // User → Role (Many-to-One)
+      User.belongsTo(models.Role, {
+        foreignKey: "roleid",
+        as: "role"
       });
 
     }

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/auth");
+const isAdmin = require("../middleware/isAdmin");
 const checkPermission = require("../middleware/checkPermission");
 
 const AuthController = require("../controllers/AuthController");
@@ -94,7 +95,7 @@ router.post("/login", AuthController.login);
  *       401:
  *         description: Unauthorized
  */
-router.post("/create-user", verifyToken, AuthController.createUser);
+router.post("/create-user", verifyToken, isAdmin, AuthController.createUser);
 
 /**
  * @swagger
@@ -125,7 +126,7 @@ router.post("/create-user", verifyToken, AuthController.createUser);
  */
 router.post(
   "/assign-permission",
-  verifyToken,
+  verifyToken,isAdmin,
   AuthController.assignPermission
 );
 

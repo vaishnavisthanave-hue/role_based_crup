@@ -2,9 +2,9 @@
   "name": "role_based_crud",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+   "test": "echo \"Tests not implemented yet\"",
     "build": "tsc",
     "start": "node app.js",
     "dev": "nodemon app.js"
@@ -17,6 +17,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "fluent-ffmpeg": "^2.1.3",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
     "multer": "^2.2.0",
@@ -26,13 +27,8 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^26.1.2",
     "nodemon": "^3.1.14",
-    "sequelize-cli": "^6.6.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^7.0.2"
+    "sequelize-cli": "^6.6.5"
   }
 }

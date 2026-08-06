@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/auth");
+const isAdmin= require("../middleware/isAdmin");
 const checkPermission = require("../middleware/checkPermission");
 
 const UserController = require("../controllers/UserController");
@@ -20,7 +21,7 @@ const UserController = require("../controllers/UserController");
  *         description: Unauthorized
  */
 
-router.get("/vendors", verifyToken, UserController.getAllVendors);
+router.get("/vendors", verifyToken, isAdmin, UserController.getAllVendors);
 
 /**
  * @swagger

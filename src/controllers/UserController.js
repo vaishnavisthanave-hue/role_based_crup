@@ -3,24 +3,8 @@ const { User, Role } = require("../models");
 class UserController {
   static async getAllVendors(req, res) {
     try {
-
-          console.log("req.user", req.user);
-            const role = await Role.findOne({
-    where: {
-        id: req.user.roleid,
-        name: "admin"
-    }
-});
-
-if (!role) {
-    return res.status(403).json({
-        success: false,
-        message: "You do not have permission to show all vendor."
-    });
-}
-      // Vendor role find karo
       const vendorRole = await Role.findOne({
-        where: { name: "Vendor" } // agar column roleName hai to roleName likho
+        where: { name: "vendor" }
       });
 
       if (!vendorRole) {
@@ -30,10 +14,10 @@ if (!role) {
         });
       }
 
-      // Sirf vendor users lao
+     
       const vendors = await User.findAll({
         where: {
-          roleId: vendorRole.id
+          roleid: vendorRole.id
         },
         attributes: {
           exclude: ["password"]

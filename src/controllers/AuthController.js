@@ -2,13 +2,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Role, Permission, UserPermission } = require("../models");
 
-
-console.log("   User Attributes:", User);
-
-const AuthController = {
+class AuthController{
 
     // Register User
-    async register(req, res) {
+  static async register(req, res) {
         try {
 
             const { name, email, password } = req.body;
@@ -53,19 +50,19 @@ const AuthController = {
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: "Internal server error."
             });
 
         }
-    },
+    }
 
     // Login
-    async login(req, res) {
+   static async login(req, res) {
 
         try {
 
             const { email, password } = req.body;
-            console.log("console.log(req.body);", req.body);
+          
             if (!email || !password) {
                 return res.status(400).json({
                     success: false,
@@ -77,7 +74,7 @@ const AuthController = {
                 where: { email }
             });
 
-            console.log("user11", user);
+            
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -122,34 +119,45 @@ const AuthController = {
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: "Internal server error."
             });
 
         }
 
-    },
+    }
 
-    createUser: async (req, res) => {
-
+   static async createUser(req, res) {
 
         try {
 
-            console.log("req.user", req.user);
-            const role = await Role.findOne({
-                where: {
-                    id: req.user.roleid,
-                    name: "admin"
-                }
-            });
-
-            if (!role) {
-                return res.status(403).json({
-                    success: false,
-                    message: "You do not have permission to create users."
-                });
-            }
-
             const { name, email, password, roleid } = req.body;
+            if (!name || !email || !password || !roleid) {
+            return res.status(400).json({
+                success: false,
+                message: "Name, email, password and roleid are required."
+            });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid email format."
+            });
+        }
+
+        // Password strength
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
+            });
+        }
 
             const exists = await User.findOne({
                 where: { email }
@@ -170,26 +178,28 @@ const AuthController = {
                 password: hashedPassword,
                 roleid
             });
+            const userData = user.toJSON();
+            delete userData.password;
 
             return res.status(201).json({
                 success: true,
                 message: "User created successfully.",
-                data: user
+                data: userData
             });
 
         } catch (err) {
 
             return res.status(500).json({
                 success: false,
-                message: err.message
+                message: "Internal server error."
             });
 
         }
+    }
 
-    },
-    async assignPermission(req, res) {
+   static async assignPermission(req, res) {
         try {
-
+            
             const { userId, permissionId } = req.body;
 
             // Check User
@@ -244,7 +254,7 @@ const AuthController = {
 
             return res.status(500).json({
                 success: false,
-                message: error.message
+                message: "Internal server error."
             });
         }
     }
