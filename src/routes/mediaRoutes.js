@@ -17,4 +17,9 @@ router.post(
   ]),
   MediaController.createMedia
 );
+router.get(
+  "/stream/:type/:filename",
+
+  MediaController.streamMedia
+);
 module.exports = router;

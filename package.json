@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-   "test": "echo \"Tests not implemented yet\"",
+    "test": "echo \"Tests not implemented yet\"",
     "build": "tsc",
     "start": "node app.js",
     "dev": "nodemon app.js"
@@ -23,6 +23,7 @@
     "multer": "^2.2.0",
     "mysql2": "^3.23.2",
     "sequelize": "^6.37.8",
+    "sharp": "^0.35.3",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1"
   },

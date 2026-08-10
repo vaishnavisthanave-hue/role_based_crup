@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
    audio: DataTypes.STRING,
    file: DataTypes.STRING,
    fileHash: DataTypes.STRING,
+   thumbnail: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
    userid: {
      type: DataTypes.INTEGER,
      allowNull: false,
