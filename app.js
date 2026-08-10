@@ -10,6 +10,7 @@ const swaggerSpec = require("./swagger");
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const businessRoutes = require("./src/routes/businessRoutes");
+const mediaRoutes = require("./src/routes/mediaRoutes");
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/business", businessRoutes);
+app.use("/media", mediaRoutes);
+
 
 // Root route
 app.get("/", (req, res) => {
