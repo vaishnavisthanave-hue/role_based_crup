@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Role.init({
-    roleid: DataTypes.STRING,
     name: DataTypes.STRING
   }, {
     sequelize,

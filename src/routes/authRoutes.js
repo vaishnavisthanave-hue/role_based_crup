@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const verifyToken = require("../middleware/auth");
+const checkAdmin = require("../middleware/admin");
 const checkPermission = require("../middleware/checkPermission");
 
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
+console.log("checkAdmin:", typeof checkAdmin);
 
 /**
  * @swagger

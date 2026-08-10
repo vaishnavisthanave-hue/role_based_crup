@@ -33,7 +33,7 @@ if (!role) {
       // Sirf vendor users lao
       const vendors = await User.findAll({
         where: {
-          roleId: vendorRole.id
+          roleid: vendorRole.id
         },
         attributes: {
           exclude: ["password"]
