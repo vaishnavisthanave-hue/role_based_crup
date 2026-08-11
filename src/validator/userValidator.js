@@ -1,4 +1,4 @@
-const validateCreateUser = (req, res, next) => {
+const validateCreateUser = (err,req, res, next) => {
 
     const {
         name,

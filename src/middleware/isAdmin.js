@@ -1,6 +1,6 @@
 const { Role } = require("../models");
 
-const isAdmin = async (req, res, next) => {
+const isAdmin = async (error,req, res, next) => {
     try {
         const role = await Role.findOne({
             where: {
@@ -22,7 +22,7 @@ const isAdmin = async (req, res, next) => {
 
         return res.status(500).json({
             success: false,
-            message: "Internal server error."
+            message: error.message
         });
     }
 };

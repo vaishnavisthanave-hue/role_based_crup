@@ -51,7 +51,7 @@ class AuthController {
 
             return res.status(500).json({
                 success: false,
-                message: "Internal server error."
+                message: error.message
             });
 
         }
@@ -139,7 +139,7 @@ class AuthController {
 
         try {
 
-            // const { name, email, password, roleid } = req.body;
+            const { name, email, password, roleid } = req.body;
             // if (!name || !email || !password || !roleid) {
             //     return res.status(400).json({
             //         success: false,
@@ -156,7 +156,7 @@ class AuthController {
             //     });
             // }
 
-            // Password strength
+            // // Password strength
             // const passwordRegex =
             //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -200,7 +200,7 @@ class AuthController {
 
             return res.status(500).json({
                 success: false,
-                message: "Internal server error."
+                message: "Internal Server Error"
             });
 
         }
