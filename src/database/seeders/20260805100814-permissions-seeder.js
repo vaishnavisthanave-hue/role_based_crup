@@ -45,6 +45,11 @@ module.exports = {
         name: 'UPDATE_BUSINESS',
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        name: 'UPLOAD_MEDIA',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
 
     ]);

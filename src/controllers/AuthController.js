@@ -1,11 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Role, Permission, UserPermission } = require("../models");
+const crypto = require("crypto");
 
-class AuthController{
+class AuthController {
 
     // Register User
-  static async register(req, res) {
+    static async register(req, res) {
         try {
 
             const { name, email, password } = req.body;
@@ -57,12 +58,12 @@ class AuthController{
     }
 
     // Login
-   static async login(req, res) {
+    static async login(req, res) {
 
         try {
 
             const { email, password } = req.body;
-          
+
             if (!email || !password) {
                 return res.status(400).json({
                     success: false,
@@ -74,7 +75,7 @@ class AuthController{
                 where: { email }
             });
 
-            
+
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -91,11 +92,17 @@ class AuthController{
                 });
             }
 
+            const sessionToken = crypto.randomBytes(32).toString("hex");
+
+            await user.update({
+                sessionToken
+            });
             const token = jwt.sign(
                 {
                     id: user.id,
                     email: user.email,
-                    roleid: user.roleid
+                    roleid: user.roleid,
+                    sessionToken:user.sessionToken,
                 },
                 process.env.JWT_SECRET,
                 {
@@ -111,7 +118,9 @@ class AuthController{
                     id: user.id,
                     name: user.name,
                     email: user.email,
-                    roleid: user.roleid
+                    roleid: user.roleid,
+                    sessionToken:user.sessionToken,
+                
                 }
             });
 
@@ -119,45 +128,45 @@ class AuthController{
 
             return res.status(500).json({
                 success: false,
-                message: "Internal server error."
+                message: "Internal Server Error"
             });
 
         }
 
     }
 
-   static async createUser(req, res) {
+    static async createUser(req, res) {
 
         try {
 
-            const { name, email, password, roleid } = req.body;
-            if (!name || !email || !password || !roleid) {
-            return res.status(400).json({
-                success: false,
-                message: "Name, email, password and roleid are required."
-            });
-        }
+            // const { name, email, password, roleid } = req.body;
+            // if (!name || !email || !password || !roleid) {
+            //     return res.status(400).json({
+            //         success: false,
+            //         message: "Name, email, password and roleid are required."
+            //     });
+            // }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid email format."
-            });
-        }
+            // if (!emailRegex.test(email)) {
+            //     return res.status(400).json({
+            //         success: false,
+            //         message: "Invalid email format."
+            //     });
+            // }
 
-        // Password strength
-        const passwordRegex =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            // Password strength
+            // const passwordRegex =
+            //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        if (!passwordRegex.test(password)) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
-            });
-        }
+            // if (!passwordRegex.test(password)) {
+            //     return res.status(400).json({
+            //         success: false,
+            //         message:
+            //             "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
+            //     });
+            // }
 
             const exists = await User.findOne({
                 where: { email }
@@ -197,9 +206,9 @@ class AuthController{
         }
     }
 
-   static async assignPermission(req, res) {
+    static async assignPermission(req, res) {
         try {
-            
+
             const { userId, permissionId } = req.body;
 
             // Check User

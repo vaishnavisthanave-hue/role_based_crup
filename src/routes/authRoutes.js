@@ -6,6 +6,7 @@ const checkPermission = require("../middleware/checkPermission");
 
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
+const validateCreateUser =  require("../validator/userValidator");
 
 /**
  * @swagger
@@ -95,7 +96,7 @@ router.post("/login", AuthController.login);
  *       401:
  *         description: Unauthorized
  */
-router.post("/create-user", verifyToken, isAdmin, AuthController.createUser);
+router.post("/create-user", verifyToken, isAdmin, validateCreateUser,AuthController.createUser);
 
 /**
  * @swagger
