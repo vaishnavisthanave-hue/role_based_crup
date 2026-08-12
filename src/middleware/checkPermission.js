@@ -1,4 +1,4 @@
-const { User, Permission } = require("../models");
+const { User, Permission,Role} = require("../models");
 
 const checkPermission = (permissionName) => {
   return async (req, res, next) => {
@@ -17,7 +17,11 @@ const checkPermission = (permissionName) => {
           message: "User not found"
         });
       }
-
+       const role = await Role.findByPk(req.user.roleid);
+       
+       if (role && role.name.toLowerCase() === "admin") {
+        return next();
+      }
       const hasPermission = user.Permissions.some(
         permission => permission.name === permissionName
       );

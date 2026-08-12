@@ -209,10 +209,10 @@ class AuthController {
     static async assignPermission(req, res) {
         try {
 
-            const { userId, permissionId } = req.body;
+            const { userid, permissionId } = req.body;
 
             // Check User
-            const user = await User.findByPk(userId);
+            const user = await User.findByPk(userid);
 
             if (!user) {
                 return res.status(404).json({
@@ -234,7 +234,7 @@ class AuthController {
             // Check if permission is already assigned
             const alreadyAssigned = await UserPermission.findOne({
                 where: {
-                    userId,
+                    userId: userid,
                     permissionId
                 }
             });
@@ -248,7 +248,7 @@ class AuthController {
 
             // Assign Permission
             const assignPermission = await UserPermission.create({
-                userId,
+                userId: userid,
                 permissionId
             });
 

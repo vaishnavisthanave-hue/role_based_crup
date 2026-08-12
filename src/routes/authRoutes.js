@@ -125,10 +125,6 @@ router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthControl
  *       404:
  *         description: User or Permission not found
  */
-router.post(
-  "/assign-permission",
-  verifyToken,isAdmin,
-  AuthController.assignPermission
-);
+router.post("/assign-permission",verifyToken, isAdmin, AuthController.assignPermission);
 
 module.exports = router;
