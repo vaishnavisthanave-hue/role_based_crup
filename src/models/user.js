@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     is_request: {
       type: DataTypes.INTEGER,
-      defaultValue: 1
+      defaultValue: 0
     },
     deletedAt: {
       type: DataTypes.DATE,

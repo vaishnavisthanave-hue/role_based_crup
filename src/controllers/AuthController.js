@@ -268,32 +268,32 @@ class AuthController {
         }
     }
 
-    //     static async requestDelete(req, res) {
-    //   try {
-    //     const user = await User.findByPk(req.user.id);
+        static async requestDelete(req, res) {
+      try {
+        const user = await User.findByPk(req.user.id);
 
-    //     if (!user) {
-    //       return res.status(404).json({
-    //         success: false,
-    //         message: "User not found",
-    //       });
-    //     }
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: "User not found",
+          });
+        }
 
-    //     await user.update({
-    //       is_request: 1,
-    //     });
+        await user.update({
+          is_request: 1,
+        });
 
-    //     return res.status(200).json({
-    //       success: true,
-    //       message: "User deletion request submitted",
-    //     });
-    //   } catch (error) {
-    //     return res.status(500).json({
-    //       success: false,
-    //       message: error.message,
-    //     });
-    //   }
-    // }
+        return res.status(200).json({
+          success: true,
+          message: "User deletion request submitted",
+        });
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    }
 
     static async fatchpendingdelete(req, res) {
         try {

@@ -134,6 +134,7 @@ router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthControl
  *       404:
  *         description: User or Permission not found
  */
+router.post( "/:id", AuthController.requestDelete);
 router.post( "/assign-permission",verifyToken, isAdmin, AuthController.assignPermission);
 router.get( "/fetchdeletependinguser",verifyToken, isAdmin, AuthController.fatchpendingdelete);
 

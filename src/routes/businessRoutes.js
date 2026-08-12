@@ -137,10 +137,7 @@ router.get("/:id", verifyToken, BusinessController.getBusinessById);
  *       404:
  *         description: Business not found
  */
-router.put(
-  "/:id",
-  verifyToken,
-  upload.fields([
+router.put("/:id", verifyToken, upload.fields([
     { name: "image", maxCount: 1 },
     { name: "video", maxCount: 1 }
   ]),
