@@ -388,6 +388,47 @@ const MediaController = {
     });
   }
 }
+,
+ async updateMedia(req, res) {
+  try {
+    const { image, video, audio, file } = req.body;
+
+    await req.media.update({
+      image,
+      video,
+      audio,
+      file
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Media updated successfully",
+      data: req.media
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+},
+async deleteMedia(req, res) {
+  try {
+    await req.media.destroy();
+
+    return res.status(200).json({
+      success: true,
+      message: "Media deleted successfully"
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
 };
 
 module.exports = MediaController;

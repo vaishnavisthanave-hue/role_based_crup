@@ -18,17 +18,11 @@ router.post(
   ]),
   MediaController.createMedia
 );
-router.get(
-  "/stream/:type/:filename",
+router.get("/stream/:type/:filename",MediaController.streamMedia);
 
-  MediaController.streamMedia
-);
+router.get("/:id",verifyToken,canAccessMedia,MediaController.getMedia);
 
-router.get(
-  "/:id",
-  verifyToken,
-  canAccessMedia,
-  MediaController.getMedia
-);
+router.put("/:id", verifyToken, canAccessMedia, MediaController.updateMedia);
+router.delete("/:id", verifyToken, canAccessMedia, MediaController.deleteMedia);
 
 module.exports = router;
