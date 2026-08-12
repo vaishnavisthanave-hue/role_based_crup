@@ -102,7 +102,7 @@ class AuthController {
                     id: user.id,
                     email: user.email,
                     roleid: user.roleid,
-                    sessionToken:user.sessionToken,
+                    sessionToken: user.sessionToken,
                 },
                 process.env.JWT_SECRET,
                 {
@@ -119,8 +119,8 @@ class AuthController {
                     name: user.name,
                     email: user.email,
                     roleid: user.roleid,
-                    sessionToken:user.sessionToken,
-                
+                    sessionToken: user.sessionToken,
+
                 }
             });
 
@@ -267,6 +267,64 @@ class AuthController {
             });
         }
     }
+
+    //     static async requestDelete(req, res) {
+    //   try {
+    //     const user = await User.findByPk(req.user.id);
+
+    //     if (!user) {
+    //       return res.status(404).json({
+    //         success: false,
+    //         message: "User not found",
+    //       });
+    //     }
+
+    //     await user.update({
+    //       is_request: 1,
+    //     });
+
+    //     return res.status(200).json({
+    //       success: true,
+    //       message: "User deletion request submitted",
+    //     });
+    //   } catch (error) {
+    //     return res.status(500).json({
+    //       success: false,
+    //       message: error.message,
+    //     });
+    //   }
+    // }
+
+    static async fatchpendingdelete(req, res) {
+        try {
+            const user = await User.findAll({
+                where: {
+                    is_request: 1,
+                    active: 1,  
+                }
+            })
+            if (user.length === 0) {
+                return res.status(200).json({
+                    success: true,
+                    message: "No pending user found.",
+                    data: [],
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: "Pending users found.",
+                data: user,
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: error.message,
+                data: [],
+            });
+        }
+    }
+
 }
 
 

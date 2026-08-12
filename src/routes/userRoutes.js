@@ -39,9 +39,6 @@ router.get("/vendors", verifyToken, isAdmin, UserController.getAllVendors);
  *         description: Permission denied
  */
 
-router.get("/pervendors",verifyToken,
-  checkPermission("VIEW_VENDOR"),
-  UserController.getAllVendors
-);
+router.get("/pervendors",verifyToken,checkPermission("VIEW_VENDOR"), UserController.getAllVendors);
 
 module.exports = router;

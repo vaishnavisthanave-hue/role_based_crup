@@ -99,10 +99,12 @@ router.post("/login", AuthController.login);
 router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthController.createUser);
 
 /**
+ /**
  * @swagger
  * /auth/assign-permission:
  *   post:
  *     summary: Assign permission to a user
+ *     description: Only Admin users can assign permissions.
  *     tags: [Authentication]
  *     security:
  *       - bearerAuth: []
@@ -112,19 +114,27 @@ router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthControl
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - userId
+ *               - permissionId
  *             properties:
  *               userId:
  *                 type: integer
+ *                 example: 2
  *               permissionId:
  *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Permission assigned successfully
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - Only Admin users can assign permissions
  *       404:
  *         description: User or Permission not found
  */
-router.post("/assign-permission",verifyToken, isAdmin, AuthController.assignPermission);
+router.post( "/assign-permission",verifyToken, isAdmin, AuthController.assignPermission);
+router.get( "/fetchdeletependinguser",verifyToken, isAdmin, AuthController.fatchpendingdelete);
 
 module.exports = router;

@@ -1,21 +1,19 @@
-const { Role } = require("../models");
+const { User,Role } = require("../models");
 
-const isAdmin = async (req, res, next) => {
+const isUserActive = async (req, res, next) => {
     try {
-        const role = await Role.findOne({
+        const user = await User.findOne({
             where: {
-                id: req.user.roleid,
-                name: "admin"
+                id: req.user.id,
+                active :1,             
             }
         });
-
-        if (!role) {
+        if (!user) {
             return res.status(403).json({
                 success: false,
-                message: "Access denied. Admin only."
+                message: "Access denied. User is not Active"
             });
         }
-
         next();
     } catch (error) {
         console.error(error);
@@ -27,4 +25,4 @@ const isAdmin = async (req, res, next) => {
     }
 };
 
-module.exports = isAdmin;
+module.exports = isUserActive;

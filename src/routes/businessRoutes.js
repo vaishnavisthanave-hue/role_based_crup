@@ -147,12 +147,5 @@ router.put(
   BusinessController.updateBusiness
 );
 
-
-router.delete(
-  "/:id",
-  verifyToken,
-  canAccessBusiness,
-  BusinessController.deleteBusiness
-);
-
+router.delete( "/:id",verifyToken,canAccessBusiness, BusinessController.deleteBusiness);
 module.exports = router;

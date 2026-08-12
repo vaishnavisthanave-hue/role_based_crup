@@ -26,10 +26,24 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     roleid: DataTypes.INTEGER,
+    active: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1
+    },
+    is_request: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
+    },
     sessionToken: {
-    type: DataTypes.STRING,
-    allowNull: true
-}
+      type: DataTypes.STRING,
+      allowNull: true,
+
+    }
   }, {
     sequelize,
     modelName: 'User',

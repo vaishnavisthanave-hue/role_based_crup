@@ -14,6 +14,7 @@ const mediaRoutes = require("./src/routes/mediaRoutes");
 
 const app = express();
 
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/business", businessRoutes);
 app.use("/media", mediaRoutes);
+require("./src/schedulers/userDeleteScheduler");
 
 
 // Root route
