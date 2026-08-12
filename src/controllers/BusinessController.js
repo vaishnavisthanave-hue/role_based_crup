@@ -1,8 +1,9 @@
-const { Business, user } = require("../models");
+const { Business, user ,Role} = require("../models");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const ffmpeg = require("fluent-ffmpeg");
+const canUpdateBusiness = require("../policies/updatebusiness");
 
 class BusinessController {
 
@@ -234,12 +235,23 @@ class BusinessController {
 
   static async getMyBusinesses(req, res) {
     try {
-      const businesses = await Business.findAll({
-        where: {
-          userid: req.user.id
-        }
-      });
-
+      const role = await Role.findByPk(req.user.roleid);
+        if (!role) {
+        return res.status(403).json({
+          success: false,
+          message: "Role not found"
+        });
+      }
+      let businesses;
+      if (role.name === "admin") {
+        businesses = await Business.findAll();
+      } else {
+        businesses = await Business.findAll({
+          where: {
+            userid: req.user.id
+          }
+        });
+      }
       return res.status(200).json({
         success: true,
         data: businesses
@@ -252,6 +264,23 @@ class BusinessController {
       });
     }
   }
+  
+  static async deleteBusiness(req, res) {
+  try {
+    await req.business.destroy();
+
+    return res.status(200).json({
+      success: true,
+      message: "Business deleted successfully"
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
 
 }
 

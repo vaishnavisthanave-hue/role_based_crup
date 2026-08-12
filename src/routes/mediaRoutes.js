@@ -5,6 +5,7 @@ const isAdmin = require("../middleware/isAdmin");
 const checkPermission = require("../middleware/checkPermission");
 
 const MediaController = require("../controllers/MediaController");
+const canAccessMedia = require("../middleware/canAccessMedia");
 const upload = require("../middleware/upload");
 router.post(
   "/",
@@ -22,4 +23,12 @@ router.get(
 
   MediaController.streamMedia
 );
+
+router.get(
+  "/:id",
+  verifyToken,
+  canAccessMedia,
+  MediaController.getMedia
+);
+
 module.exports = router;

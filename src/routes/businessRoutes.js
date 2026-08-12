@@ -4,7 +4,8 @@ const router = express.Router();
 const verifyToken = require("../middleware/auth");
 const upload = require("../middleware/upload");
 const BusinessController = require("../controllers/BusinessController");
-const validateCreateBusiness = require("../validator/businessValidator")
+const validateCreateBusiness = require("../validator/businessValidator");
+const canAccessBusiness = require("../middleware/canAccessBusiness");
 
 /**
  * @swagger
@@ -144,6 +145,14 @@ router.put(
     { name: "video", maxCount: 1 }
   ]),
   BusinessController.updateBusiness
+);
+
+
+router.delete(
+  "/:id",
+  verifyToken,
+  canAccessBusiness,
+  BusinessController.deleteBusiness
 );
 
 module.exports = router;
