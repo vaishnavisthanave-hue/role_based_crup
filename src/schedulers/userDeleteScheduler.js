@@ -1,7 +1,7 @@
 const cron = require("node-cron");
 
 const {
-  processUserDeleteRequests,
+  processAllUserDeleteRequests,
 } = require("../service/userDeleteService");
 
 const processUserDeleteRequests = async () => {

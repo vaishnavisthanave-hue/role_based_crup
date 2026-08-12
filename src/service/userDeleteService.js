@@ -1,6 +1,6 @@
 const { User } = require("../models");
 
-const processUserDeleteRequests = async () => {
+const processAllUserDeleteRequests = async () => {
   try {
     const users = await User.findAll({
       where: {
@@ -47,5 +47,5 @@ const processUserDeleteRequests = async () => {
 };
 
 module.exports = {
-  processUserDeleteRequests,
+  processAllUserDeleteRequests,
 };
