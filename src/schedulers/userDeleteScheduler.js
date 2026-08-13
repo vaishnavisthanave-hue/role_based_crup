@@ -8,7 +8,7 @@ const processUserDeleteRequests = async () => {
   try {
     console.log("User delete scheduler started");
 
-    await processOneUserDelete();
+    await processAllUserDeleteRequests();
 
   } catch (error) {
     console.error(
@@ -23,5 +23,4 @@ cron.schedule(
   "*/5 * * * *",
   processUserDeleteRequests
 );
-
 module.exports = processUserDeleteRequests;

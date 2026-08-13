@@ -37,8 +37,7 @@ const verifyToken = async(req, res, next) => {
                 message:"User not found"
             })
         }
-        console.log("user=>",user)
-       console.log("user session",user.sessionToken, "decord session",decoded.sessionToken)
+   
         if(user.sessionToken != decoded.sessionToken){
             return res.status(401).json({
                 success:false,
