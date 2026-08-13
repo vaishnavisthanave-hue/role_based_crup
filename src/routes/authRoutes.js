@@ -7,6 +7,7 @@ const checkPermission = require("../middleware/checkPermission");
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
 const validateCreateUser =  require("../validator/userValidator");
+const asyncHandler = require("../middleware/asyncHandler");
 
 /**
  * @swagger
@@ -98,6 +99,8 @@ router.post("/login", AuthController.login);
  */
 router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthController.createUser);
 
+router.get("/", verifyToken, isAdmin,AuthController.getuser);
+
 /**
  /**
  * @swagger
@@ -134,7 +137,7 @@ router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthControl
  *       404:
  *         description: User or Permission not found
  */
-router.post( "/:id", AuthController.requestDelete);
+router.post( "/:id",asyncHandler(AuthController.requestDelete));
 router.post( "/assign-permission",verifyToken, isAdmin, AuthController.assignPermission);
 router.get( "/fetchdeletependinguser",verifyToken, isAdmin, AuthController.fatchpendingdelete);
 

@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Role, Permission, UserPermission } = require("../models");
 const crypto = require("crypto");
+const AppError = require("../utils/AppError");
+const { Op } = require("sequelize");
 
 class AuthController {
 
@@ -268,39 +270,66 @@ class AuthController {
         }
     }
 
-        static async requestDelete(req, res) {
-      try {
-        const user = await User.findByPk(req.user.id);
+    //     static async requestDelete(req, res) {
+    //   try {
+    //     const user = await User.findByPk(req.params.id);
+
+    //     if (!user) {
+    //       return res.status(404).json({
+    //         success: false,
+    //         message: "User not found",
+    //       });
+    //     }
+
+    //     await user.update({
+    //       is_request: 1,
+    //     });
+
+    //     return res.status(200).json({
+    //       success: true,
+    //       message: "User deletion request submitted",
+    //     });
+    //   } catch (error) {
+    //     return res.status(500).json({
+    //       success: false,
+    //       message: error.message,
+    //     });
+    //   }
+    // }
+
+    static async requestDelete(req, res) {
+        console.log("requestDelete CONTROLLER CALLED");
+
+        const user = await User.findByPk(req.params.id);
+
 
         if (!user) {
-          return res.status(404).json({
-            success: false,
-            message: "User not found",
-          });
+
+            throw AppError(
+                "User not found",
+                404,
+                "USER_NOT_FOUND"
+            );
         }
 
         await user.update({
-          is_request: 1,
+            is_request: 1
         });
 
         return res.status(200).json({
-          success: true,
-          message: "User deletion request submitted",
+            success: true,
+            message: "User deletion request submitted"
         });
-      } catch (error) {
-        return res.status(500).json({
-          success: false,
-          message: error.message,
-        });
-      }
     }
+
+
 
     static async fatchpendingdelete(req, res) {
         try {
             const user = await User.findAll({
                 where: {
                     is_request: 1,
-                    active: 1,  
+                    active: 1,
                 }
             })
             if (user.length === 0) {
@@ -322,6 +351,89 @@ class AuthController {
                 message: error.message,
                 data: [],
             });
+        }
+    }
+
+  static async getuser(req, res, next) {
+        try {
+
+            // Pagination
+            const page = Math.max(
+                parseInt(req.query.page) || 1,
+                1
+            );
+
+            const limit = Math.min(
+                Math.max(parseInt(req.query.limit) || 5, 1),
+                100
+            );
+
+            const offset = (page - 1) * limit;
+
+            // Filters
+            const { name, email, active, roleid } = req.query;
+
+            const where = {};
+
+            // Name filter
+            if (name) {
+                where.name = {
+                    [Op.like]: `%${name}%`
+                };
+            }
+
+            // Email filter
+            if (email) {
+                where.email = {
+                    [Op.like]: `%${email}%`
+                };
+            }
+
+            // Active filter
+            if (active !== undefined) {
+                where.active = Number(active);
+            }
+
+            // Role filter
+            if (roleid !== undefined) {
+                where.roleid = Number(roleid);
+            }
+
+            // Query
+            const result = await User.findAndCountAll({
+                where,
+                limit,
+                offset,
+                order: [
+                    ["id", "DESC"]
+                ]
+            });
+
+            // Total pages
+            const totalPages = Math.ceil(
+                result.count / limit
+            );
+
+            return res.status(200).json({
+                success: true,
+                message: "Records found",
+
+                data: result.rows,
+
+                pagination: {
+                    currentPage: page,
+                    limit: limit,
+                    totalRecords: result.count,
+                    totalPages: totalPages,
+                    hasNextPage: page < totalPages,
+                    hasPreviousPage: page > 1
+                }
+            });
+
+        } catch (error) {
+
+            next(error);
+
         }
     }
 

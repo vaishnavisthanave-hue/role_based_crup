@@ -11,6 +11,8 @@ const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const businessRoutes = require("./src/routes/businessRoutes");
 const mediaRoutes = require("./src/routes/mediaRoutes");
+const AppError = require("./src/utils/AppError");
+const errorHandler = require("./src/middleware/errorHandler");
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use("/uploads", express.static(path.join(__dirname, "src", "uploads")));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
+
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/business", businessRoutes);
@@ -40,35 +43,49 @@ app.get("/", (req, res) => {
 });
 
 
-app.use((err, req, res, next) => {
-    console.error(err);
+app.use((req, res, next) => {
 
-    // Multer errors
-    if (err.name === "MulterError") {
-        return res.status(400).json({
-            success: false,
-            message: err.message
-        });
-    }
+  next(
+    AppError(
+      `Route ${req.method} ${req.originalUrl} not found`,
+      404,
+      "ROUTE_NOT_FOUND"
+    )
+  );
 
-    // File type validation errors
-    if (err.message === "Only image and video files are allowed.") {
-        return res.status(400).json({
-            success: false,
-            message: err.message
-        });
-    }
-
-    // Default error response
-    return res.status(err.status || 500).json({
-        success: false,
-        message: err.message
-    });
 });
 
+// app.use((err, req, res, next) => {
+//     console.error(err);
+
+//     // Multer errors
+//     if (err.name === "MulterError") {
+//         return res.status(400).json({
+//             success: false,
+//             message: err.message
+//         });
+//     }
+
+//     // File type validation errors
+//     if (err.message === "Only image and video files are allowed.") {
+//         return res.status(400).json({
+//             success: false,
+//             message: err.message
+//         });
+//     }
+
+//     // Default error response
+//     return res.status(err.status || 500).json({
+//         success: false,
+//         message: err.message
+//     });
+// });
+
+app.use(errorHandler);
 
 // Start server (ALWAYS LAST)
 const PORT = process.env.PORT || 3000;
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
