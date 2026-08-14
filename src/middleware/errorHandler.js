@@ -13,12 +13,10 @@ const errorHandler = (err, req, res, next) => {
     message: err.message,
     code: err.code || "INTERNAL_ERROR",
     statusCode: err.statusCode || 500,
-
     method: req.method,
     url: req.originalUrl,
 
     userId: req.user?.id || null,
-
     ip: req.ip,
 
     stack: err.stack
@@ -64,7 +62,6 @@ const errorHandler = (err, req, res, next) => {
 
   // Custom operational error
   if (err.isOperational) {
-
     return res.status(err.statusCode).json({
       success: false,
       message: err.message,

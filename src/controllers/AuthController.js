@@ -4,6 +4,7 @@ const { User, Role, Permission, UserPermission } = require("../models");
 const crypto = require("crypto");
 const AppError = require("../utils/AppError");
 const { Op } = require("sequelize");
+const { sendWelcomeEmail } = require("../service/emailService");
 
 class AuthController {
 
@@ -139,74 +140,30 @@ class AuthController {
 
     static async createUser(req, res) {
 
-        try {
+        const { name, email, password, roleid } = req.body;
 
-            const { name, email, password, roleid } = req.body;
-            // if (!name || !email || !password || !roleid) {
-            //     return res.status(400).json({
-            //         success: false,
-            //         message: "Name, email, password and roleid are required."
-            //     });
-            // }
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-            // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            roleid
+        });
 
-            // if (!emailRegex.test(email)) {
-            //     return res.status(400).json({
-            //         success: false,
-            //         message: "Invalid email format."
-            //     });
-            // }
+        await sendWelcomeEmail(user);
 
-            // // Password strength
-            // const passwordRegex =
-            //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const userData = user.toJSON();
 
-            // if (!passwordRegex.test(password)) {
-            //     return res.status(400).json({
-            //         success: false,
-            //         message:
-            //             "Password must be at least 8 characters and include uppercase, lowercase, number and special character."
-            //     });
-            // }
+        delete userData.password;
 
-            const exists = await User.findOne({
-                where: { email }
-            });
-
-            if (exists) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Email already exists."
-                });
-            }
-
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            const user = await User.create({
-                name,
-                email,
-                password: hashedPassword,
-                roleid
-            });
-            const userData = user.toJSON();
-            delete userData.password;
-
-            return res.status(201).json({
-                success: true,
-                message: "User created successfully.",
-                data: userData
-            });
-
-        } catch (err) {
-
-            return res.status(500).json({
-                success: false,
-                message: "Internal Server Error"
-            });
-
-        }
+        return res.status(201).json({
+            success: true,
+            message: "User created successfully.",
+            data: userData
+        });
     }
+
 
     static async assignPermission(req, res) {
         try {
@@ -312,10 +269,26 @@ class AuthController {
             );
         }
 
-        await user.update({
+        const updateData = {
             is_request: 1
-        });
+        };
 
+        // Check invalid fields
+        const modelFields = Object.keys(User.rawAttributes);
+
+        const invalidFields = Object.keys(updateData).filter(
+            field => !modelFields.includes(field)
+        );
+
+        if (invalidFields.length > 0) {
+            throw AppError(
+                `Invalid field: ${invalidFields.join(", ")}`,
+                400,
+                "INVALID_FIELD"
+            );
+        }
+
+        await user.update(updateData);
         return res.status(200).json({
             success: true,
             message: "User deletion request submitted"
@@ -354,7 +327,7 @@ class AuthController {
         }
     }
 
-  static async getuser(req, res, next) {
+    static async getuser(req, res, next) {
         try {
 
             // Pagination
@@ -371,9 +344,26 @@ class AuthController {
             const offset = (page - 1) * limit;
 
             // Filters
-            const { name, email, active, roleid } = req.query;
+            const {search, name, email, active, roleid } = req.query;
 
             const where = {};
+
+            if (search) {
+
+            where[Op.or] = [
+                {
+                    name: {
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    email: {
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            ];
+
+        }
 
             // Name filter
             if (name) {

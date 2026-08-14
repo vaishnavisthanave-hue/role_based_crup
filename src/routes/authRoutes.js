@@ -97,7 +97,7 @@ router.post("/login", AuthController.login);
  *       401:
  *         description: Unauthorized
  */
-router.post("/create-user", verifyToken, isAdmin,validateCreateUser, AuthController.createUser);
+router.post("/create-user", verifyToken, isAdmin,validateCreateUser,  asyncHandler(AuthController.createUser));
 
 router.get("/", verifyToken, isAdmin,AuthController.getuser);
 
